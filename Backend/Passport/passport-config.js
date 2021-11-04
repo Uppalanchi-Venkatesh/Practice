@@ -17,18 +17,18 @@ passport.deserializeUser((id , done)=>{
         });
 });
 
-var customFields = {usernameField : 'username', passwordField : 'password'}
+var customFields = {usernameField : 'username', passwordField : 'password'};
 
 var verifyCallback = (username, password, done)=> {
     var query={username : username}
     RegisterUserLib.getSingleItemByQuery(query, model, (err, user)=>{
         if(err)
-            return done(err);
+            return done(err, {message: err});
         if(!user)
             return done(null, false, {message: 'No user with that username'});
             bcrypt.compare(password, user.password, (err, result)=>{
                 if(err) 
-                    done(err);
+                    return done(err, {message: err});
                 if(result) 
                     return done(null, user);
                 return done(null, false, {message: 'Password is incorrect'});
@@ -38,6 +38,6 @@ var verifyCallback = (username, password, done)=> {
 
 var Strategy = new localStrategy(customFields,verifyCallback)
 
-passport.use(Strategy);
+passport.use(Strategy); 
 
-module.exports = passport;
+module.exports = {passport};

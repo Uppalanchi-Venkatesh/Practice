@@ -5,7 +5,7 @@ var db=require("./Backend/DB/DBconnect");
 var userlib=require("./Backend/Lib/userlib");
 var RegisterUserLib = require('./Backend/Lib/RegisterUserLib');
 var bcrypt = require('bcrypt'); 
-var passport = require("./Backend/Passport/passport-config");
+var passport = require("./Backend/Passport/passport-config").passport;
 var flash = require('express-flash');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
@@ -29,7 +29,6 @@ app.use(session({
     //cookie: { secure: false },
     store : new MongoStore({mongooseConnection : mongoose.connection})
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -94,7 +93,7 @@ app.post('/login',
         successRedirect: '/dashboard',
         failureRedirect: '/login',
         failureFlash: true
-    }),
+    })
 );
 
 /*app.get('/getregisteruser',function(req,res){
